@@ -63,7 +63,7 @@ const SEED=()=>[
 {id:'sony-wh-1000',name:'Sony WH-1000 quloqchin',brand:'Sony',cat:'gadget',sub:'Quloqchin',os:'',pub:1,t:1,desc:'Shovqinni yo\'qotuvchi quloqchin.',full:'Faol shovqin bostirish va uzoq ishlash vaqti.',specs:[['Ishlash vaqti','30 soat'],['Ulanish','Bluetooth 5.3']],colors:[{n:'Qora',h:'#1d1e21',imgs:[]},{n:'Kumush',h:'#a9acb2',imgs:[]}],mem:[{gb:0,p:3.9e6,s:3.4e6}],a:A(0,0,5,0,4,4)},
 {id:'galaxy-watch-8',name:'Samsung Galaxy Watch 8',brand:'Samsung',cat:'gadget',sub:'Smart soat',os:'android',pub:1,t:0,desc:'Sport va salomatlik uchun soat.',full:'Faollikni kuzatish, uyqu tahlili va qulay dizayn.',specs:[['Ekran','1.4" AMOLED'],['Suvga chidamlilik','5 ATM']],colors:[{n:'Grafit',h:'#35373b',imgs:[]},{n:'Kumush',h:'#b4b7bd',imgs:[]}],mem:[{gb:0,p:3.2e6}],a:A(0,0,4,0,4,5)}];
 const PRS=()=>[{code:'ARCI10',type:'pct',val:10,min:0,on:1,cat:'',pids:[],from:'',to:''}];
-const SUPA_URL='',SUPA_KEY='';
+const SUPA_URL='https://pxcrqhthvsjvnykctxid.supabase.co',SUPA_KEY='sb_publishable_rFws1GYQqQC9_TYXVA5pKw_cj9u06J7';
 const sb=SUPA_URL&&window.supabase?supabase.createClient(SUPA_URL,SUPA_KEY):null;let READY=!sb,KNOWN=new Set(),KP=new Set();
 let P=sb?[]:SEED(),PR=sb?[]:PRS(),OR=LS('arc2_or',[]),CT=LS('arc2_ct',[]),FV=LS('arc2_fv',[]),RV=LS('arc2_rv',[]),VW=LS('arc2_vw',{}),CP=LS('arc2_cp',[]);
 let ST=Object.assign({tg:'theziyodulloh',ig:'https://instagram.com/arcistone_',ch:'https://t.me/arcistone_st',ph:'',dl:'Toshkent bo\'ylab 1 kun ichida. O\'zbekiston bo\'ylab odatda 2 kun, maksimal 3 kun. To\'lov texnikani qabul qilgandan keyin.',bg:[[0,2e6],[2e6,4e6],[4e6,7e6],[7e6,10e6],[10e6,15e6],[15e6,1e12]],gbg:[[0,5e5],[5e5,15e5],[15e5,3e6],[3e6,1e12]]},{});
