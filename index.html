@@ -27,15 +27,20 @@ header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);bor
   flex-shrink: 0;
 }
 
+/* Logo theme switching */
+.logo .logo-light {
+  display: block;
+}
+
 .logo .logo-dark {
   display: none;
 }
 
-body.dark .logo .logo-light {
+:root[data-theme="dark"] .logo .logo-light {
   display: none;
 }
 
-body.dark .logo .logo-dark {
+:root[data-theme="dark"] .logo .logo-dark {
   display: block;
 }
 nav a{color:var(--mu);text-decoration:none;padding:7px 10px;border-radius:8px;font-size:14px}nav a:hover{color:var(--tx);background:var(--s2)}
