@@ -138,10 +138,13 @@ const AL={camera:'Kamera',gaming:'O\'yin',battery:'Batareya',display:'Ekran',per
 const CORE=[
  {k:'screenSize',label:'Ekran o‘lchami',hint:'Masalan: 6.7 dyuym',aliases:['ekran o‘lchami',"ekran o'lchami",'ekran olchami','display size']},
  {k:'screenType',label:'Ekran turi',hint:'Masalan: AMOLED',aliases:['ekran turi','displey turi','display type']},
+ {k:'refreshRate',label:'Ekran yangilanish tezligi',hint:'Masalan: 120 Hz',aliases:['ekran yangilanish tezligi','yangilanish tezligi','refresh rate']},
  {k:'processor',label:'Protsessor',hint:'Masalan: Snapdragon 8 Gen 3',aliases:['protsessor','processor','chipset']},
  {k:'battery',label:'Batareya',hint:'Masalan: 5000 mAh',aliases:['batareya','akkumulyator','battery']},
  {k:'ram',label:'Operativ xotira',hint:'Masalan: 8 GB',aliases:['operativ xotira','ram','tezkor xotira']},
- {k:'camera',label:'Asosiy kamera',hint:'Masalan: 50 MP + 12 MP',aliases:['asosiy kamera','kamera','main camera']}
+ {k:'storage',label:'Asosiy xotira',hint:'Masalan: 256 GB',aliases:['asosiy xotira','ichki xotira','doimiy xotira','internal storage','rom']},
+ {k:'camera',label:'Asosiy kamera',hint:'Masalan: 50 MP + 12 MP',aliases:['asosiy kamera','kamera','main camera']},
+ {k:'frontCamera',label:'Old kamera',hint:'Masalan: 12 MP',aliases:['old kamera','selfie kamera','front camera']}
 ];
 const coreField=name=>CORE.find(c=>c.aliases.includes(String(name||'').trim().toLowerCase()));
 function splitCore(specs,existing){
