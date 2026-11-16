@@ -295,6 +295,32 @@ else if(a=='reset'){if(confirm('Demo ma\'lumot tiklansinmi? Mahsulotlar va promo
 else if(a=='bex'){$('#bt').value=JSON.stringify({v:3,P,PR,ST})}
 else if(a=='bcp'){navigator.clipboard.writeText($('#bt').value).then(()=>toast('Nusxalandi'),()=>toast('Nusxalab bo\'lmadi'))}
 else if(a=='bim'){try{const j=JSON.parse($('#bt').value);if(!Array.isArray(j.P)||!Array.isArray(j.PR))throw 0;if(!confirm('Joriy ma\'lumot almashtiriladi. Davom etilsinmi?'))return;P=j.P;PR=j.PR;ST=Object.assign(ST,j.ST||{});sync();toast('Tiklandi');rr()}catch(x){toast('Zaxira matni noto\'g\'ri')}}});
+let swipeX = 0;
+let swipeY = 0;
+
+document.addEventListener('touchstart', e => {
+  if (!e.target.closest('[data-gallery-swipe]')) return;
+  swipeX = e.changedTouches[0].clientX;
+  swipeY = e.changedTouches[0].clientY;
+}, {passive:true});
+
+document.addEventListener('touchend', e => {
+  if (!e.target.closest('[data-gallery-swipe]')) return;
+
+  const dx = e.changedTouches[0].clientX - swipeX;
+  const dy = e.changedTouches[0].clientY - swipeY;
+
+  if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
+
+  const p = P.find(x => x.id === S.lv);
+  if (!p) return;
+
+  const imgs = (p.colors[S.c] || p.colors[0]).imgs || [];
+  if (imgs.length < 2) return;
+
+  S.g = (S.g + (dx < 0 ? 1 : -1) + imgs.length) % imgs.length;
+  rr();
+}, {passive:true});
 function addC(id,c,m){const k=CT.find(x=>x.p==id&&x.c==c&&x.m==m);k?k.q++:CT.push({p:id,c,m,q:1});sync()}
 function esave(){const d=S.ed,e=[];if(!d.name.trim())e.push('Nomi kerak');if(!d.brand.trim())e.push('Brend kerak');
 d.mem.forEach(m=>{if(!(m.p>0))e.push('Narx 0 dan katta bo\'lishi kerak');else if(m.s&&m.s>=m.p)e.push('Chegirmali narx asl narxdan past bo\'lishi kerak')});
