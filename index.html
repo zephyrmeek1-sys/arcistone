@@ -104,11 +104,11 @@ const SEED=()=>[
 const PRS=()=>[{code:'ARCI10',type:'pct',val:10,min:0,on:1,cat:'',pids:[],from:'',to:''}];
 const SUPA_URL='https://pxcrqhthvsjvnykctxid.supabase.co',SUPA_KEY='sb_publishable_rFws1GYQqQC9_TYXVA5pKw_cj9u06J7';
 const sb=SUPA_URL&&window.supabase?supabase.createClient(SUPA_URL,SUPA_KEY):null;let READY=!sb,KNOWN=new Set(),KP=new Set();
-let P=sb?[]:SEED(),PR=sb?[]:PRS(),OR=LS('arc2_or',[]),CT=LS('arc2_ct',[]),FV=LS('arc2_fv',[]),RV=LS('arc2_rv',[]),VW=LS('arc2_vw',{}),CP=LS('arc2_cp',[]);
+let P=sb?[]:SEED(),PR=sb?[]:PRS(),OR=LS('arc2_or',[]),CT=LS('arc2_ct',[]),FV=LS('arc2_fv',[]),RV=LS('arc2_rv',[]),VW=LS('arc2_vw',{}),CP=LS('arc2_cp',[]),CPV=LS('arc2_cpv',{});
 let ST=Object.assign({tg:'theziyodulloh',ig:'https://instagram.com/arcistone_',ch:'https://t.me/arcistone_st',ph:'',dl:'Toshkent bo\'ylab 1 kun ichida. O\'zbekiston bo\'ylab odatda 2 kun, maksimal 3 kun. To\'lov texnikani qabul qilgandan keyin.',bg:[[0,2e6],[2e6,4e6],[4e6,7e6],[7e6,10e6],[10e6,15e6],[15e6,1e12]],gbg:[[0,5e5],[5e5,15e5],[15e5,3e6],[3e6,1e12]]},{});
 let OWN=0,LASTJ='',PT=0;
-let S={c:0,m:0,g:0,f:{q:'',cat:'',brand:'',os:'',gb:'',max:'',disc:0,sort:'new'},sm:{a:[]},tab:LS('arc3_tab','dash'),ed:null,dirty:0,promo:null,last:null};
-const sync=()=>{sv('arc2_or',OR);sv('arc2_ct',CT);sv('arc2_fv',FV);sv('arc2_rv',RV);sv('arc2_vw',VW);sv('arc2_cp',CP);if(OWN){const j=JSON.stringify({P,PR,ST});if(j!==LASTJ){LASTJ=j;clearTimeout(PT);PT=setTimeout(pubNow,500)}}};
+let S={c:0,m:0,g:0,f:{q:'',cat:'',brand:'',os:'',gb:'',max:'',disc:0,sort:'new'},sm:{a:[]},tab:LS('arc3_tab','dash'),ed:null,dirty:0,promo:null,last:null,cmpPick:null,cmpIdx:0};
+const sync=()=>{sv('arc2_or',OR);sv('arc2_ct',CT);sv('arc2_fv',FV);sv('arc2_rv',RV);sv('arc2_vw',VW);sv('arc2_cp',CP);sv('arc2_cpv',CPV);if(OWN){const j=JSON.stringify({P,PR,ST});if(j!==LASTJ){LASTJ=j;clearTimeout(PT);PT=setTimeout(pubNow,500)}}};
 LASTJ=JSON.stringify({P,PR,ST});
 async function pubNow(){if(!sb||!OWN)return;try{
 const rows=P.map(p=>({id:p.id,pub:p.pub?1:0,data:p}));let r;
@@ -122,6 +122,7 @@ KP=new Set(PR.map(x=>x.code));toast('Saqlandi ✓')}catch(e){toast('Saqlab bo\'l
 const live=()=>P.filter(p=>p.pub);
 const cfg=(p,i)=>{const m=p.mem[i]||p.mem[0],fin=m.s&&m.s<m.p?m.s:m.p;return{fin,old:fin<m.p?m.p:0,pct:fin<m.p?Math.round((1-fin/m.p)*100):0,gb:m.gb}};
 const ml=m=>m.gb?(m.gb>=1024?m.gb/1024+' TB':m.gb+' GB'):'Standart';
+const cmpModelLabel=m=>`${m.ram?m.ram+' GB RAM':'RAM kiritilmagan'} / ${m.gb?ml(m):'Standart xotira'}`;
 const pr=f=>`<b class=pr>${fmt(f.fin)}</b>${f.old?`<span class=old>${fmt(f.old)}</span><span class=bd>-${f.pct}%</span>`:''}`;
 const low=p=>Math.min(...p.mem.map((_,i)=>cfg(p,i).fin));
 const maxd=p=>Math.max(...p.mem.map((_,i)=>cfg(p,i).pct));
@@ -141,8 +142,6 @@ const CORE=[
  {k:'refreshRate',label:'Ekran yangilanish tezligi',hint:'Masalan: 120 Hz',aliases:['ekran yangilanish tezligi','yangilanish tezligi','refresh rate']},
  {k:'processor',label:'Protsessor',hint:'Masalan: Snapdragon 8 Gen 3',aliases:['protsessor','processor','chipset']},
  {k:'battery',label:'Batareya',hint:'Masalan: 5000 mAh',aliases:['batareya','akkumulyator','battery']},
- {k:'ram',label:'Operativ xotira',hint:'Masalan: 8 GB',aliases:['operativ xotira','ram','tezkor xotira']},
- {k:'storage',label:'Asosiy xotira',hint:'Masalan: 256 GB',aliases:['asosiy xotira','ichki xotira','doimiy xotira','internal storage','rom']},
  {k:'camera',label:'Asosiy kamera',hint:'Masalan: 50 MP + 12 MP',aliases:['asosiy kamera','kamera','main camera']},
  {k:'frontCamera',label:'Old kamera',hint:'Masalan: 12 MP',aliases:['old kamera','selfie kamera','front camera']}
 ];
@@ -187,11 +186,17 @@ ${p.mem.length>1||p.mem[0].gb?`<div class=row>${p.mem.map((m,i)=>`<button class=
 <div class=box style="margin-top:16px"><b>Yetkazib berish va to'lov</b><p class=mu style="margin:.3em 0 0">${esc(ST.dl)}</p></div></div></div>
 <h2>Tavsif</h2><p style="white-space: pre-line; line-height: 1.7;">${esc(p.full||p.desc)}</p>${p.specs&&p.specs.length?`<h2>Asosiy xususiyatlar</h2><div class=tbl><table>${p.specs.map(s=>`<tr><td class=mu>${esc(s[0])}</td><td>${esc(s[1])}</td></tr>`).join('')}</table></div>`:''}${sec('O\'xshash mahsulotlar',rec)}`}
 function wish(){const l=FV.map(id=>live().find(p=>p.id==id)).filter(Boolean);return `<h2 style="margin-top:0">Sevimlilar</h2>${l.length?`<div class=grid>${l.map(card).join('')}</div>`:'<div class=box>Hozircha sevimli mahsulotlar yo\'q. <a class=btn href="#catalog">Katalogga</a></div>'}`}
+function cmpModal(){
+ const p=live().find(x=>x.id==S.cmpPick);if(!p)return '';
+ const mem=p.mem||[];
+ return `<div style="position:fixed;inset:0;background:#0009;z-index:50;display:flex;align-items:center;justify-content:center;padding:18px" data-act=cmp-bg><div class=box style="width:min(420px,100%);max-height:85vh;overflow:auto;background:var(--sf)" data-cmp-dialog><h3 style="margin-top:0">Qaysi modelni taqqoslaymiz?</h3><p class=mu>${esc(p.name)}</p>${mem.map((m,i)=>`<label class=opt data-act=cmp-model data-i=${i} style="display:flex;align-items:center;gap:10px"><input type=radio name=cmp-model value="${i}" ${i==S.cmpIdx?'checked':''}><span>${esc(cmpModelLabel(m))} · ${fmt(cfg(p,i).fin)}</span></label>`).join('')}<div class=row style="margin-top:14px"><button class=btn data-act=cmp-confirm data-p="${p.id}">Taqqoslashga qo‘shish</button><button class=ghost data-act=cmp-cancel>Bekor qilish</button></div></div></div>`;
+}
 function compare(){
  const l=CP.map(id=>live().find(p=>p.id==id)).filter(Boolean);
  if(!l.length)return `<h2 style="margin-top:0">Taqqoslash</h2><div class=box>Taqqoslash uchun mahsulot tanlang (⇄ tugmasi, 3 tagacha). <a class=btn href="#catalog">Katalogga</a></div>`;
+ const ix=p=>{const n=+(CPV[p.id]||0);return Math.max(0,Math.min(n,(p.mem||[]).length-1))};
  const rows=CORE.map(c=>`<tr><td class=mu>${c.label}</td>${l.map(p=>`<td>${esc(coreValue(p,c.k)||'—')}</td>`).join('')}</tr>`).join('');
- return `<h2 style="margin-top:0">Taqqoslash</h2><div class=tbl><table><tr><th></th>${l.map(p=>`<th>${esc(p.name)}<br><button class=ic data-act=cmp data-p="${p.id}">Olib tashlash</button></th>`).join('')}</tr><tr><td class=mu>Narx</td>${l.map(p=>`<td>${pr(cfg(p,0))}</td>`).join('')}</tr><tr><td class=mu>Brend</td>${l.map(p=>`<td>${esc(p.brand||'—')}</td>`).join('')}</tr><tr><td class=mu>Tizim</td>${l.map(p=>`<td>${p.os=='ios'?'iOS':p.os=='android'?'Android':'—'}</td>`).join('')}</tr>${rows}</table></div>`;
+ return `<h2 style="margin-top:0">Taqqoslash</h2><div class=tbl><table><tr><th></th>${l.map(p=>`<th>${esc(p.name)}<br><span class=mu>${esc(cmpModelLabel(p.mem[ix(p)]||p.mem[0]||{}))}</span><br><button class=ic data-act=cmp-remove data-p="${p.id}">Olib tashlash</button></th>`).join('')}</tr><tr><td class=mu>Narx</td>${l.map(p=>`<td>${pr(cfg(p,ix(p)))}</td>`).join('')}</tr><tr><td class=mu>Brend</td>${l.map(p=>`<td>${esc(p.brand||'—')}</td>`).join('')}</tr><tr><td class=mu>Tizim</td>${l.map(p=>`<td>${p.os=='ios'?'iOS':p.os=='android'?'Android':'—'}</td>`).join('')}</tr><tr><td class=mu>Operativ xotira</td>${l.map(p=>{const m=(p.mem||[])[ix(p)]||{};return `<td>${m.ram?esc(m.ram+' GB'):'—'}</td>`}).join('')}</tr><tr><td class=mu>Asosiy xotira</td>${l.map(p=>{const m=(p.mem||[])[ix(p)]||{};return `<td>${m.gb?esc(ml(m)):'—'}</td>`}).join('')}</tr>${rows}</table></div>`;
 }
 // Smart Selection
 const PUR=[['Kontent va suratga olish (Creator)','creator'],['O\'yinlar va maksimal tezlik (Gaming)','gaming'],['Ish, biznes va o\'qish (Pro / Office)','pro'],['Kundalik qulay foydalanish (Standard)','standard'],['Yaqin insonimga sovg\'a uchun (Gift)','gift']];
@@ -252,7 +257,7 @@ function done(){const o=S.last;if(!o)return '<h2>Buyurtma topilmadi</h2><a class
 const msg=`Assalomu alaykum!\n\nARCISTONE orqali yangi buyurtma qoldirmoqchiman.\n\nBuyurtma raqami: ${o.id}\n\nMijoz: ${o.name}\n\nTelefon: ${o.phone}\n\nManzil: ${o.addr}\n\nMahsulotlar:\n${o.items.map(i=>`${i.n}\nRang: ${i.col}\nXotira: ${i.mem}\nSoni: ${i.q}\nNarxi: ${fmt(i.pr)}`).join('\n\n')}\n\nPromokod: ${o.promo||'Yo\'q'}\n\nChegirma: ${fmt(o.disc)}\n\nYakuniy summa: ${fmt(o.total)}\n\nBuyurtmani tasdiqlashda yordam berishingizni so'rayman.`;
 return `<div class=box><h2 style="margin-top:0">Buyurtma ${o.id}</h2><p>Buyurtmangizni tasdiqlash uchun menejerimizga Telegram orqali buyurtma ma'lumotlarini yuborishingiz kerak.</p><p>Quyidagi tugmani bosish orqali buyurtmangiz haqidagi barcha ma'lumotlarni oson yuborishingiz mumkin. 😊</p><p>Xaridingiz barakali bo'lsin, InshaAlloh!</p><div class=row><a class=btn target=_blank rel=noopener href="${tgl(msg)}">Telegram orqali yuborish</a><button class=ghost data-act=cpy data-t="${encodeURIComponent(msg)}">Matnni nusxalash</button></div><p class=mu>Telegram ochilmasa, matnni nusxalab @${esc(ST.tg)} ga yuboring. Buyurtma siz Telegramda «Yuborish»ni bosgandagina menejerga yetib boradi. Holati: ${esc(o.status)}.</p></div>`}
 // Admin
-const NEW=()=>({_new:1,id:'',name:'',brand:'',cat:'phone',sub:'',os:'android',pub:0,t:Date.now(),desc:'',full:'',st:'',colors:[{n:'Qora',h:'#222222',imgs:[]}],mem:[{gb:128,p:0,s:0}],a:A(3,3,3,3,3,3)});
+const NEW=()=>({_new:1,id:'',name:'',brand:'',cat:'phone',sub:'',os:'android',pub:0,t:Date.now(),desc:'',full:'',st:'',colors:[{n:'Qora',h:'#222222',imgs:[]}],mem:[{ram:4,gb:128,p:0,s:0}],a:A(3,3,3,3,3,3)});
 function admin(){if(!OWN)return !sb?'<div class=box>Server ulanmagan (SUPA_URL va SUPA_KEY ni kiriting).</div>':`<div class=box style="max-width:380px"><h2 style="margin-top:0">Admin kirish</h2><div class=row><input id=ae1 type=email placeholder="Email" autocomplete=username><input id=ae2 type=password placeholder="Parol" autocomplete=current-password></div><p id=ae3 class=er></p><button class=btn data-act=login>Kirish</button></div>`;const T=[['dash','Boshqaruv'],['prod','Mahsulotlar'],['promo','Promokodlar'],['ord','Buyurtmalar'],['set','Sozlamalar'],['bak','Zaxira']];
 return `<h2 style="margin-top:0">Admin panel</h2><div class=tabs>${T.map(t=>`<button class="chip ${S.tab==t[0]?'on':''}" data-act=tab data-t=${t[0]}>${t[1]}</button>`).join('')}</div>${{dash:adash,prod:aprod,promo:apromo,ord:aord,set:aset,bak:abak}[S.tab]()}`}
 function adash(){return `<div class=adv><div class=box><b>${P.length}</b><br><span class=mu>Mahsulotlar (faol ${live().length})</span></div><div class=box><b>${new Set(P.map(p=>p.cat)).size}</b><br><span class=mu>Toifalar</span></div><div class=box><b>${PR.length}</b><br><span class=mu>Promokodlar</span></div><div class=box><b>${OR.length}</b><br><span class=mu>Buyurtmalar</span></div></div><h3>So'nggi mahsulotlar</h3><div class=tbl><table>${P.slice().sort((a,b)=>b.t-a.t).slice(0,5).map(p=>`<tr><td>${esc(p.name)}</td><td>${p.pub?'Faol':'Qoralama'}</td></tr>`).join('')}</table></div><h3>So'nggi buyurtmalar</h3><div class=tbl><table>${OR.slice(0,5).map(o=>`<tr><td>${o.id}</td><td>${esc(o.name)}</td><td>${fmt(o.total)}</td></tr>`).join('')||'<tr><td class=mu>Hali yo\'q</td></tr>'}</table></div><p class=mu>Har bir saqlash o'zgarishni barcha mijozlarga darhol ko'rsatadi.</p><button class=ghost data-act=logout>Chiqish</button>`}
@@ -261,7 +266,7 @@ function editor(){const d=S.ed;d.core=d.core||{};const pn=d.cat=='phone',keys=pn
 return `<div class=box><h3 style="margin-top:0">${d._new?'Yangi mahsulot':'Tahrirlash'}</h3>
 <h4>1. Asosiy ma'lumot</h4><div class=row><input data-b=name value="${esc(d.name)}" placeholder="Nomi"><input data-b=brand value="${esc(d.brand)}" placeholder="Brend" list=bl><datalist id=bl>${[...new Set(P.map(p=>p.brand))].map(b=>`<option value="${esc(b)}">`).join('')}</datalist><select data-b=cat data-rr=1>${so([['phone','Smartfon'],['gadget','Gadget']],d.cat)}</select>${pn?`<select data-b=os>${so([['android','Android'],['ios','iOS']],d.os)}</select>`:`<input data-b=sub value="${esc(d.sub)}" placeholder="Gadget turi (Quloqchin...)"><select data-b=os>${so([['','Universal'],['android','Android'],['ios','iOS']],d.os)}</select>`}</div><br><textarea data-b=desc rows=3 placeholder="Qisqa tavsif" style="width:100%;resize:vertical">${esc(d.desc)}</textarea><br><br><textarea data-b=full rows=3 style="width:100%" placeholder="To'liq tavsif">${esc(d.full)}</textarea>
 <h4>2. Ranglar va rasmlar (vertikal 3:4 tavsiya etiladi)</h4><p class=mu style="margin:0 0 6px">2400 px gacha va 3.5 MB gacha rasmlar asl holida yuklanadi. Kattalari sifat 0.92 bilan optimallashtiriladi.</p>${d.colors.map((c,i)=>`<div class=box style="margin:8px 0"><div class=row><input data-b="colors.${i}.n" value="${esc(c.n)}" placeholder="Rang nomi"><input type=color data-b="colors.${i}.h" value="${esc(c.h)}"><button class=ic data-act=ecdel data-i=${i}>Rangni o'chirish</button></div><div class=row style="margin:8px 0;align-items:flex-start">${(c.imgs||[]).map((x,k)=>`<div style="width:112px"><div class="ph im" style="margin-bottom:3px"><img src="${esc(x.u)}" alt="" loading=lazy></div><div class=mu style="font-size:11px;line-height:1.3">${x.w?x.w+'×'+x.h+' · '+x.kb+' KB':''}${x.o?' · asl':''}${x.w&&Math.abs(x.w/x.h-.75)>.03?' <span class=er>3:4 emas</span>':''}</div><div class=row style="gap:2px"><button class=ic data-act=imv data-i=${i} data-k=${k} data-d=-1>◀</button><button class=ic data-act=imv data-i=${i} data-k=${k} data-d=1>▶</button><button class=ic data-act=imp data-i=${i} data-k=${k} title="Asosiy">★</button><button class=ic data-act=imd data-i=${i} data-k=${k}>✕</button></div></div>`).join('')||'<span class=mu>Rasm yo\'q</span>'}</div><input type=file multiple accept="image/jpeg,image/png,image/webp" data-up=${i}></div>`).join('')}<button class=ghost data-act=ecadd>+ Rang qo'shish</button>
-<h4>3. Xotira / konfiguratsiya va narxlar (xotira 0 = standart)</h4>${d.mem.map((m,i)=>`<div class=row style="margin:6px 0"><input type=number min=0 data-n=1 data-b="mem.${i}.gb" value="${m.gb}" placeholder="GB" style="width:90px"><input type=number min=0 data-n=1 data-b="mem.${i}.p" value="${m.p}" placeholder="Narx"><input type=number min=0 data-n=1 data-b="mem.${i}.s" value="${m.s||''}" placeholder="Chegirmali narx"><button class=ic data-act=emdel data-i=${i}>O'chirish</button></div>`).join('')}<button class=ghost data-act=emadd>+ Konfiguratsiya</button>
+<h4>3. Xotira / konfiguratsiya va narxlar (xotira 0 = standart)</h4>${d.mem.map((m,i)=>`<div class=row style="margin:6px 0"><input type=number min=0 data-n=1 data-b="mem.${i}.ram" value="${m.ram||''}" placeholder="RAM GB" style="width:100px"><input type=number min=0 data-n=1 data-b="mem.${i}.gb" value="${m.gb}" placeholder="Asosiy xotira GB" style="width:150px"><input type=number min=0 data-n=1 data-b="mem.${i}.p" value="${m.p}" placeholder="Narx"><input type=number min=0 data-n=1 data-b="mem.${i}.s" value="${m.s||''}" placeholder="Chegirmali narx"><button class=ic data-act=emdel data-i=${i}>O'chirish</button></div>`).join('')}<button class=ghost data-act=emadd>+ Konfiguratsiya</button>
 ${pn?`<h4>4. Asosiy texnik xususiyatlar</h4><div class=adv>${CORE.map(c=>`<label class=mu style="font-size:13px">${c.label}<input data-b="core.${c.k}" value="${esc(d.core[c.k]||'')}" placeholder="${c.hint}" style="display:block;width:100%;margin-top:4px"></label>`).join('')}</div>`:''}
 <h4>${pn?'5':'4'}. Qo'shimcha xususiyatlar (har qatorda «Nomi: qiymat»)</h4><textarea data-b=st rows=4 style="width:100%">${esc(d.st)}</textarea>
 <h4>${pn?'6':'5'}. Tavsiya ko'rsatkichlari (1–5)</h4><div class=row>${keys.map(k=>`<label>${AL[k]} <input type=number min=1 max=5 data-n=1 data-b="a.${k}" value="${d.a[k]||3}" style="width:62px"></label>`).join('')}</div>
@@ -274,8 +279,8 @@ function abak(){return `<div class=box><p class=mu>Zaxira mahsulotlar, promokodl
 // router
 function go(r){location.hash=r}
 function render(){nav();ft();const h=(location.hash||'#home').slice(1);if(!READY){$('#app').innerHTML='<p class=mu>Yuklanmoqda...</p>';return}
-let v;if(h.startsWith('p-'))v=prod(h.slice(2));else v=({home,catalog,smart,cart,admin,done,wish,compare}[h]||home)();$('#app').innerHTML=v;window.scrollTo(0,0)}
-const rr=()=>{if(!READY)return;const y=scrollY;nav();ft();const h=(location.hash||'#home').slice(1);$('#app').innerHTML=h.startsWith('p-')?prod(h.slice(2)):({home,catalog,smart,cart,admin,done,wish,compare}[h]||home)();scrollTo(0,y)};
+let v;if(h.startsWith('p-'))v=prod(h.slice(2));else v=({home,catalog,smart,cart,admin,done,wish,compare}[h]||home)();$('#app').innerHTML=v+cmpModal();window.scrollTo(0,0)}
+const rr=()=>{if(!READY)return;const y=scrollY;nav();ft();const h=(location.hash||'#home').slice(1);$('#app').innerHTML=(h.startsWith('p-')?prod(h.slice(2)):({home,catalog,smart,cart,admin,done,wish,compare}[h]||home)())+cmpModal();scrollTo(0,y)};
 addEventListener('hashchange',()=>{S.c=S.m=S.g=0;if((location.hash||'').slice(1)!='admin'&&S.ed&&S.dirty&&!confirm('Saqlanmagan o\'zgarishlar bor. Chiqilsinmi?')){history.back();return}if((location.hash||'').slice(1)!='admin')S.ed=null;render()});
 const gp=(o,p)=>p.split('.').reduce((a,k)=>a[k],o);
 const sp=(o,p,v)=>{const k=p.split('.'),l=k.pop();k.reduce((a,x)=>a[x],o)[l]=v};
@@ -285,7 +290,12 @@ if(a=='go')go(d.r);else if(a=='open')go('p-'+d.p);
 else if(a=='th'){TH=TH=='dark'?'light':'dark';sv('arc2_th',TH);document.documentElement.dataset.theme=TH;nav()}
 else if(a=='share'){const u=location.href.split('#')[0]+'#p-'+d.p;(navigator.share?navigator.share({url:u}):Promise.reject()).catch(()=>navigator.clipboard.writeText(u).then(()=>toast('Havola nusxalandi'),()=>toast(u)))}
 else if(a=='fav'){tog(FV,d.p)?toast('Sevimlilarga qo\'shildi'):toast('Sevimlilardan olindi');sync();rr()}
-else if(a=='cmp'){if(!CP.includes(d.p)&&CP.length>=3){toast('Eng ko\'pi bilan 3 ta mahsulot');return}tog(CP,d.p);sync();rr()}
+else if(a=='cmp'){if(CP.includes(d.p)){CP=CP.filter(x=>x!==d.p);delete CPV[d.p];sync();rr()}else{if(CP.length>=3){toast('Eng ko\'pi bilan 3 ta mahsulot');return}const p=live().find(x=>x.id==d.p);if(!p)return;S.cmpPick=d.p;S.cmpIdx=Math.max(0,Math.min(+(CPV[d.p]||0),(p.mem||[]).length-1));rr()}}
+else if(a=='cmp-model'){S.cmpIdx=+d.i;rr()}
+else if(a=='cmp-confirm'){const p=live().find(x=>x.id==d.p);if(!p)return;if(!CP.includes(d.p)&&CP.length<3){CP.push(d.p);CPV[d.p]=S.cmpIdx;S.cmpPick=null;sync();rr()}else if(CP.includes(d.p)){CPV[d.p]=S.cmpIdx;S.cmpPick=null;sync();rr()}}
+else if(a=='cmp-cancel'){S.cmpPick=null;rr()}
+else if(a=='cmp-bg'){if(e.target===t){S.cmpPick=null;rr()}}
+else if(a=='cmp-remove'){CP=CP.filter(x=>x!==d.p);delete CPV[d.p];sync();rr()}
 else if(a=='cat'){S.f.cat=d.c;location.hash=='#catalog'?rr():go('catalog')}
 else if(a=='col'){S.c=i;S.g=0;rr()}else if(a=='mem'){S.m=i;rr()}else if(a=='gal'){S.g=+d.k;rr()}
 else if(a=='add'){addC(d.p,S.c,S.m);nav();toast('Savatga qo\'shildi')}else if(a=='buy'){addC(d.p,S.c,S.m);go('cart')}
@@ -303,7 +313,7 @@ else if(a=='eopen'){const p=JSON.parse(JSON.stringify(P.find(x=>x.id==d.p)));con
 else if(a=='ecancel'){if(S.dirty&&!confirm('Saqlanmagan o\'zgarishlar yo\'qoladi. Davom etilsinmi?'))return;S.ed=null;S.dirty=0;rr()}
 else if(a=='ecadd'){S.ed.colors.push({n:'Yangi rang',h:'#888888',imgs:[]});S.dirty=1;rr()}
 else if(a=='ecdel'){if(S.ed.colors.length>1){S.ed.colors.splice(i,1);S.dirty=1;rr()}else toast('Kamida bitta rang kerak')}
-else if(a=='emadd'){S.ed.mem.push({gb:0,p:0,s:0});S.dirty=1;rr()}
+else if(a=='emadd'){S.ed.mem.push({ram:0,gb:0,p:0,s:0});S.dirty=1;rr()}
 else if(a=='emdel'){if(S.ed.mem.length>1){S.ed.mem.splice(i,1);S.dirty=1;rr()}else toast('Kamida bitta konfiguratsiya kerak')}
 else if(a=='imd'){S.ed.colors[i].imgs.splice(+d.k,1);S.dirty=1;rr()}
 else if(a=='imv'){const l=S.ed.colors[i].imgs,k=+d.k,n=k+ +d.d;if(n>=0&&n<l.length){[l[k],l[n]]=[l[n],l[k]];S.dirty=1;rr()}}
